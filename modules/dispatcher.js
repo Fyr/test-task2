@@ -1,3 +1,4 @@
+const { Sequelize } = require("sequelize");
 const Worker = require("./worker");
 
 // Import constants for jobs
@@ -33,6 +34,14 @@ class Dispatcher {
     return this.getModel().findAll({ where: { status: JOB_STATUS.NEW }});
   }
 
+  async isJobAvail() {
+    const res = await this.getModel().findAll({ where: {
+      status: { [Sequelize.Op.or]: [ JOB_STATUS.NEW, JOB_STATUS.RUN ] }
+    }});
+    // console.log(res);
+    return res && res.length;
+  }
+
   /**
    * Dispatches existing jobs
    */
@@ -40,15 +49,18 @@ class Dispatcher {
     let jobs;
     this.log.info(`START Dispatching`);
 
-    while ((jobs = await this.getJobAvail()) && jobs.length) { // check jobs available to execute
-      this.log.info(`GOT new jobID: ${jobs[0].id}`);
-      let wrk = new Worker(this.log);
+    while (await this.isJobAvail()) { // check if all jobs are completed
+      const jobs = await this.getJobAvail(); // check jobs available to execute
+      if (jobs && jobs.length) {
+        this.log.info(`GOT new jobID: ${jobs[0].id}`);
+        let wrk = new Worker(this.log);
 
-      // immediately set another status to prevent the same job run twice
-      await wrk.setStatus(jobs[0], JOB_STATUS.RUN);
+        // immediately set another status to prevent the same job run twice
+        await wrk.setStatus(jobs[0], JOB_STATUS.RUN);
 
-      // run job asynchronously
-      wrk.run(jobs[0]);
+        // run job asynchronously
+        wrk.run(jobs[0]);
+      }
     }
 
     this.log.info(`END Dispatching`);
