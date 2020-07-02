@@ -1,0 +1,7 @@
+{
+  "username": "test",
+  "password": "test",
+  "database": "test",
+  "host": "localhost",
+  "dialect": "mysql"
+}

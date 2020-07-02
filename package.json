@@ -1,0 +1,12 @@
+{
+  "name": "conform5-lambda-integrations-check-hierarchy",
+  "scripts": {
+    "start": "node ./index.js",
+    "db:populate": "node ./db-populate.js"
+  },
+  "devDependencies": {
+    "axios": "^0.19.2",
+    "mysql2": "^2.1.0",
+    "sequelize": "^6.2.4"
+  }
+}

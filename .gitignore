@@ -1,0 +1,32 @@
+# Logs
+logs
+*.log
+
+# Tmp files
+tmp
+
+# Dependency directory
+node_modules
+
+# Debug log from npm
+npm-debug.log
+
+# ESlint
+*.eslintrc.*
+
+# VS Code Beautify
+.jsbeautifyrc
+
+# prettier
+.prettierrc.json
+
+# Intellij Idea files
+.idea
+
+# VS Code
+.vscode
+
+# dev env
+.env
+
+package-lock.json
