@@ -34,11 +34,13 @@ class Dispatcher {
     return this.getModel().findAll({ where: { status: JOB_STATUS.NEW }});
   }
 
+  /**
+   * Returns if any jobs are available for execution or still running
+   */
   async isJobAvail() {
     const res = await this.getModel().findAll({ where: {
       status: { [Sequelize.Op.or]: [ JOB_STATUS.NEW, JOB_STATUS.RUN ] }
     }});
-    // console.log(res);
     return res && res.length;
   }
 
@@ -46,7 +48,6 @@ class Dispatcher {
    * Dispatches existing jobs
    */
   async dispatch() {
-    let jobs;
     this.log.info(`START Dispatching`);
 
     while (await this.isJobAvail()) { // check if all jobs are completed
